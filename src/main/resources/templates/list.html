@@ -22,7 +22,7 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/form.html">파트너사 등록</a></li>
-					<li><a href="/list.html">파트너사 목록</a></li>
+					<li><a href="/list">파트너사 목록</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -40,21 +40,13 @@
 				</tr>
 			</thead>
 			<tbody>
+				{{#users}}
 				<tr>
-					<th scope="row">band</th>
-					<td>밴드</td>
-					<td>srchang@band.com</td>
+					<th scope="row">{{partnerId}}</th>
+					<td>{{partnerName}}</td>
+					<td>{{email}}</td>
 				</tr>
-				<tr>
-					<th scope="row">naver</th>
-					<td>네이버</td>
-					<td>srchang@naver.com</td>
-				</tr>
-				<tr>
-					<th scope="row">daum</th>
-					<td>다음</td>
-					<td>srchang@daum.com</td>
-				</tr>
+				{{/users}}
 			</tbody>
 		</table>
 	</div>

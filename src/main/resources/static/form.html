@@ -23,7 +23,7 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/form.html">파트너사 등록</a></li>
-					<li><a href="/list.html">파트너사 목록</a></li> <!-- srchang  -->
+					<li><a href="/list">파트너사 목록</a></li> <!-- srchang  -->
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -31,23 +31,23 @@
 		<!-- /.container-fluid -->
 	</nav>
 	<div class="container">
-		<form>
+		<form action="/create" method="post">
 			<div class="form-group">
 				<label for="userId">Partner ID</label>
-				<input type="text" class="form-control" id="userId" placeholder="파트너사 아이디">
+				<input type="text" class="form-control" name="partnerId" placeholder="파트너사 아이디">
 			</div>
 			<div class="form-group">
 				<label for="password">Password</label>
-				<input type="password" class="form-control" id="password" placeholder="패스워드">
+				<input type="password" class="form-control" name="pwd" placeholder="패스워드">
 			</div>
 			<div class="form-group">
 				<label for="name">Partner name</label>
-				<input type="text" class="form-control" id="companyName" placeholder="파트너사 명">
+				<input type="text" class="form-control" name="partnerName" placeholder="파트너사 명">
 			</div>
 			<!-- srchang  -->
 			<div class="form-group">
 				<label for="name">E-mail</label>
-				<input type="email" class="form-control" id="email" placeholder="이메일">
+				<input type="email" class="form-control" name="email" placeholder="이메일">
 			</div>
 			<button type="submit" class="btn btn-default">Submit</button>
 		</form>
