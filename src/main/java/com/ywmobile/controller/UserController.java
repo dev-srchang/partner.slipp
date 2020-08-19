@@ -16,25 +16,25 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@PostMapping("/create")
+	@PostMapping("/user/create")
 	public String create(User user) {
 		System.out.println("user : " + user.toString());
 //		users.add(user);
 		userRepository.save(user);
 
-		return "redirect:/list";
+		return "redirect:/user/list";
 	}
 
-	@GetMapping("/list")
+	@GetMapping("/user/list")
 	public String list(Model model) {
 //		model.addAttribute("users", users);
 		model.addAttribute("users", userRepository.findAll());
-		return "list";
+		return "/user/list";
 	}
 
 	// srchang - add form
-	@GetMapping("/form")
+	@GetMapping("/user/form")
 	public String form() {
-		return "form";
+		return "/user/form";
 	}
 }
