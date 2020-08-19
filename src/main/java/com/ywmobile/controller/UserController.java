@@ -5,35 +5,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ywmobile.domain.User;
 import com.ywmobile.repository.UserRepository;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
-//	private List<User> users = new ArrayList<User>();
-
 	@Autowired
 	private UserRepository userRepository;
 
-	@PostMapping("/user/create")
+	@PostMapping("/create")
 	public String create(User user) {
 		System.out.println("user : " + user.toString());
-//		users.add(user);
 		userRepository.save(user);
-
-		return "redirect:/user/list";
+		return "redirect:/user/list"; // call list method
 	}
 
-	@GetMapping("/user/list")
+	@GetMapping("/list")
 	public String list(Model model) {
-//		model.addAttribute("users", users);
 		model.addAttribute("users", userRepository.findAll());
 		return "/user/list";
 	}
 
-	// srchang - add form
-	@GetMapping("/user/form")
+	@GetMapping("/form")
 	public String form() {
 		return "/user/form";
 	}
