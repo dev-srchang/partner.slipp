@@ -14,10 +14,4 @@ public class WelcomeContoller {
 
 		return "welcome";
 	}
-
-	// add default page (index.html)
-	@GetMapping("/")
-	public String home() {
-		return "index";
-	}
 }
