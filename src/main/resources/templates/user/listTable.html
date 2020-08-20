@@ -3,7 +3,7 @@
 <head>
 	{{> include/header}}
 	
-	<title>YWM Partner list</title>
+	<title>YWMobile Partner list</title>
 </head>
 <body>
 	{{> include/navbar}}
@@ -28,7 +28,7 @@
 							<th scope="row">{{partnerId}}</th>
 							<td>{{partnerName}}</td>
 							<td>{{email}}</td>
-							<td><a href="/user/{{id}}/form" class="btn btn-success" role="button">수정</a></td>
+							<td><a href="/user/{{id}}/updateForm" class="btn btn-success" role="button">수정</a></td>
 						</tr>
 						{{/users}}
 					</tbody>
@@ -37,9 +37,6 @@
 		</div>
 	</div>
 
-	<!-- script references -->
-	<script src="/static/js/jquery-2.2.0.min.js"></script>
-	<script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/scripts.js"></script>
+	{{> include/footer}}
 </body>
 </html>

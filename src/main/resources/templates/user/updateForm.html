@@ -3,7 +3,7 @@
 <head>
 	{{> include/header}}
 	
-	<title>YWM Partner update info.</title>
+	<title>YWMobile Partner update info.</title>
 </head>
 <body>
 	{{> include/navbar}}
@@ -12,7 +12,7 @@
 		<div class="col-md-6 col-md-offset-3">
 			<div class="panel panel-default content-main">
 				{{#user}}
-				<form name="question" method="post" action="/user/{{id}}">
+				<form name="partner" method="post" action="/user/{{id}}">
 					<input type="hidden" name="_method" value="put" />
 					<div class="form-group">
 						<label for="userId">Partner ID</label> <input class="form-control" id="partnerId" name="partnerId" value="{{partnerId}}">
@@ -34,9 +34,6 @@
 		</div>
 	</div>
 
-	<!-- script references -->
-	<script src="/static/js/jquery-2.2.0.min.js"></script>
-	<script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/scripts.js"></script>
+	{{> include/footer}}
 </body>
 </html>
