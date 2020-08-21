@@ -25,7 +25,7 @@ public class UserController {
 		return "redirect:/user/listTable"; // Result : redirect to listTable.html
 	}
 
-	@RequestMapping(value = "/listTable", method = RequestMethod.GET) // Action : navbar에서 "사람 모양" 아이콘 메뉴를 눌렀을 시
+	@RequestMapping(value = "/listTable", method = RequestMethod.GET) // Action : navbar 에서 "사람 모양" 아이콘 메뉴를 눌렀을 시
 	public String listTable(Model model) {
 		model.addAttribute("users", userRepository.findAll());
 		return "/user/listTable"; // Result : move to listTable.html
@@ -53,7 +53,7 @@ public class UserController {
 		return "redirect:/user/listTable"; // Result : move to listTable.html
 	}
 
-	@RequestMapping(value = "/loginForm", method = RequestMethod.GET) // Action : navbar에서 "로그인" 메뉴 버튼 을 눌렀을 시
+	@RequestMapping(value = "/loginForm", method = RequestMethod.GET) // Action : navbar 에서 "로그인" 메뉴 버튼 을 눌렀을 시
 	public String loginForm() {
 		return "/user/loginForm"; // Result : move to loginForm.html
 	}
@@ -64,18 +64,26 @@ public class UserController {
 
 		if (userRepository.findByPartnerId(partnerId) == null) {
 			System.out.println("Login failure 1");
-			return "redirect:/user/loginForm";
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
 		}
 
 		if (!pwd.equals(user.getPwd())) {
 			System.out.println("Login failure 2");
-			return "redirect:/user/loginForm";
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
 		}
 
 		System.out.println("Login success");
 
 		// 세션에 저장 로직
 		httpSession.setAttribute("user", user);
+
+		return "redirect:/"; // Result : move to index.html
+	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET) // Action : navbar 에서 "로그아웃" 메뉴 버튼 을 눌렀을 시
+	public String logout(HttpSession httpSession) {
+		// 세션에 저장된 데이터를 삭제
+		httpSession.removeAttribute("user");
 
 		return "redirect:/"; // Result : move to index.html
 	}

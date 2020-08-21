@@ -3,15 +3,19 @@ package com.ywmobile.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "USER")
 public class User {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Getter
 	private Long id;
 
 	@Column(nullable = false, length = 20)
@@ -29,6 +33,7 @@ public class User {
 	@Setter
 	String partnerName;
 
+	@Column(nullable = false)
 	@Getter
 	@Setter
 	String email;
