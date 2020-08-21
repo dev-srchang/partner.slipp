@@ -18,7 +18,7 @@ public class User {
 	@Getter
 	private Long id;
 
-	@Column(nullable = false, length = 20)
+	@Column(nullable = false, length = 20, unique = true)
 	@Getter
 	@Setter
 	String partnerId;

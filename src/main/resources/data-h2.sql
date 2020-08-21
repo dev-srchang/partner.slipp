@@ -1,1 +1,2 @@
 INSERT INTO USER (PARTNER_ID, PWD, PARTNER_NAME, EMAIL) VALUES ('band', '1234', '밴드', 'band@gmail.com');
+INSERT INTO USER (PARTNER_ID, PWD, PARTNER_NAME, EMAIL) VALUES ('naver', '1234', '네이버', 'naver@gmail.com');

@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.199</version>
+			<version>1.4.199</version> <!-- 1.4.200 사용 시, 오류 발생 : 1.4.200 버전의 태생적인 문제점으로 검색됨 -->
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

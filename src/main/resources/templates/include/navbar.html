@@ -28,8 +28,11 @@
 						<ul class="dropdown-menu">
 							<li><a href="https://www.ywmobile.com" target="_blank">YWM Official Page</a></li>
 							<li><a href="https://stardriver.modoo.at/" target="_blank">YWM Promotional Page</a></li>
-						</ul></li>
+						</ul>
+					</li>
+					{{#sessionedUser}}
 					<li><a href="/user/listTable"><i class="glyphicon glyphicon-user"></i></a></li>
+					{{/sessionedUser}}
 				</ul>
 			</div>
 		</div>
@@ -48,15 +51,15 @@
 			<div class="collapse navbar-collapse" id="navbar-collapse2">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="active"><a href="/">포스트</a></li>
-					{{^user}}
+					{{^sessionedUser}}
 					<li><a href="/user/loginForm" role="button">로그인</a></li>
-					{{/user}}
+					{{/sessionedUser}}
 					
-					{{#user}}
+					{{#sessionedUser}}
 					<li><a href="/user/logout" role="button">로그아웃</a></li>
 					<li><a href="/user/registerForm" role="button">파트너사 등록</a></li>
-					<li><a href="#" role="button">개인 정보 수정</a></li>
-					{{/user}}
+					<li><a href="/user/{{id}}/updateForm" role="button">개인 정보 수정</a></li>
+					{{/sessionedUser}}
 				</ul>
 			</div>
 		</div>

@@ -18,47 +18,81 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST) // Action : registerForm 에서 "등록" 버튼을 눌렀을 시
+	// Action : registerForm 에서 "등록" 버튼을 눌렀을 시
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String create(User user) {
 		System.out.println("user : " + user.toString());
 		userRepository.save(user);
 		return "redirect:/user/listTable"; // Result : redirect to listTable.html
 	}
 
-	@RequestMapping(value = "/listTable", method = RequestMethod.GET) // Action : navbar 에서 "사람 모양" 아이콘 메뉴를 눌렀을 시
+	// Action : navbar 에서 "사람 모양" 아이콘 메뉴를 눌렀을 시
+	@RequestMapping(value = "/listTable", method = RequestMethod.GET)
 	public String listTable(Model model) {
 		model.addAttribute("users", userRepository.findAll());
 		return "/user/listTable"; // Result : move to listTable.html
 	}
 
-	@RequestMapping(value = "/registerForm", method = RequestMethod.GET) // Action : navbar에서 "파트너사 등록" 메뉴 버튼을 눌렀을 시
+	// Action : navbar에서 "파트너사 등록" 메뉴 버튼을 눌렀을 시
+	@RequestMapping(value = "/registerForm", method = RequestMethod.GET)
 	public String registerForm() {
 		return "/user/registerForm"; // Result : move to registerForm.html
 	}
 
-	@RequestMapping(value = "/{id}/updateForm", method = RequestMethod.GET) // Action : listTable 에서 "수정" 버튼을 눌렀을 시
-	public String updateForm(@PathVariable Long id, Model model) {
+	// Action : listTable 에서 "수정" 버튼을 눌렀을 시 & navbar 에서 "개인 정보 수정" 메뉴 버튼 을 눌렀을 시
+	@RequestMapping(value = "/{id}/updateForm", method = RequestMethod.GET)
+	public String updateForm(@PathVariable Long id, Model model, HttpSession httpSession) {
+
+		Object tmpUser = httpSession.getAttribute("sessionedUser");
+
+		// 로그인한 세션을 가진 사용자인지 판단
+		if (tmpUser == null) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		}
+
+		User sessionedUser = (User) tmpUser;
+
+		if (!id.equals(sessionedUser.getId())) {
+			return "redirect:/user/logout"; // Result : move to index.html
+//			throw new IllegalStateException("You can't update another user.");
+		}
+
 		User user = userRepository.findById(id).orElse(null);
-//		System.out.println("User : " + user.toString());
 		model.addAttribute("user", user);
 		return "/user/updateForm"; // Result : move to updateForm.html
 	}
 
-	@RequestMapping(value = "/{id}", method = {RequestMethod.POST, RequestMethod.PUT}) // Action : updateForm 에서 "수정 완료" 버튼을 눌렀을 시
-	public String update(@PathVariable Long id, User newUser) {
+	// Action : updateForm 에서 "수정 완료" 버튼을 눌렀을 시
+	@RequestMapping(value = "/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
+	public String update(@PathVariable Long id, User updatedUser, HttpSession httpSession) {
+		Object tmpUser = httpSession.getAttribute("sessionedUser");
+
+		// 로그인한 세션을 가진 사용자인지 판단
+		if (tmpUser == null) {
+			return "redirect:/user/loginForm"; // Result : move to updateForm.html
+		}
+
+		User sessionedUser = (User) tmpUser;
+
+		if (!id.equals(sessionedUser.getId())) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+//			throw new IllegalStateException("You can't update another user.");
+		}
+
 		User user = userRepository.findById(id).orElse(null);
-		user.update(newUser);
-//		System.out.println("new user : " + user.toString());
+		user.update(updatedUser);
 		userRepository.save(user);
 		return "redirect:/user/listTable"; // Result : move to listTable.html
 	}
 
-	@RequestMapping(value = "/loginForm", method = RequestMethod.GET) // Action : navbar 에서 "로그인" 메뉴 버튼 을 눌렀을 시
+	// Action : navbar 에서 "로그인" 메뉴 버튼 을 눌렀을 시
+	@RequestMapping(value = "/loginForm", method = RequestMethod.GET)
 	public String loginForm() {
 		return "/user/loginForm"; // Result : move to loginForm.html
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST) // Action : loginForm 에서 "로그인" 버튼을 눌렀을 시
+	// Action : loginForm 에서 "로그인" 버튼을 눌렀을 시
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(String partnerId, String pwd, HttpSession httpSession) {
 		User user = userRepository.findByPartnerId(partnerId);
 
@@ -75,15 +109,16 @@ public class UserController {
 		System.out.println("Login success");
 
 		// 세션에 저장 로직
-		httpSession.setAttribute("user", user);
+		httpSession.setAttribute("sessionedUser", user);
 
 		return "redirect:/"; // Result : move to index.html
 	}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.GET) // Action : navbar 에서 "로그아웃" 메뉴 버튼 을 눌렀을 시
+	// Action : navbar 에서 "로그아웃" 메뉴 버튼 을 눌렀을 시
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpSession httpSession) {
 		// 세션에 저장된 데이터를 삭제
-		httpSession.removeAttribute("user");
+		httpSession.removeAttribute("sessionedUser");
 
 		return "redirect:/"; // Result : move to index.html
 	}
