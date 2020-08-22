@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
 import lombok.Setter;
 
 @Entity
@@ -24,6 +25,7 @@ public class User {
 	String pwd;
 
 	@Column(nullable = false)
+	@Getter
 	@Setter
 	String partnerName;
 
@@ -33,7 +35,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [partnerId = " + partnerId + ", pwd = " + pwd + ", partnerName = " + partnerName + ", email = " + email + "]";
+		return "Partner [id = " + id + ", partnerId = " + partnerId + ", pwd = " + pwd + ", partnerName = " + partnerName + ", email = " + email + "]";
 	}
 	
 	public boolean matchId(Long newId) {
