@@ -8,6 +8,7 @@
 		<version>2.3.3.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>com.ywmobile</groupId>
 	<artifactId>partner.slipp</artifactId>
 	<version>1.0</version>
