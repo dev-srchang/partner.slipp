@@ -2,7 +2,6 @@ package com.ywmobile.domain;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -21,13 +20,8 @@ public class Question {
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
 	private User writer;
 	
-	@Column(nullable = false)
 	private String title;
-	
-	@Column(nullable = false)
 	private String contents;
-	
-	@Column(nullable = false)
 	private LocalDateTime createdDate;
 	
 	public Question() {
@@ -47,6 +41,11 @@ public class Question {
 		}
 		
 		return createdDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
+	}
+	
+	public void update(String title, String contents) {
+		this.title = title;
+		this.contents = contents;
 	}
 
 	@Override
