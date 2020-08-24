@@ -32,11 +32,6 @@ public class User {
 	@Column(nullable = false)
 	@Setter
 	String email;
-
-	@Override
-	public String toString() {
-		return "Partner [id = " + id + ", partnerId = " + partnerId + ", pwd = " + pwd + ", partnerName = " + partnerName + ", email = " + email + "]";
-	}
 	
 	public boolean matchId(Long newId) {
 		if (newId == null) {
@@ -59,5 +54,46 @@ public class User {
 		this.pwd = newUser.pwd;
 		this.partnerName = newUser.partnerName;
 		this.email = newUser.email;
+	}
+	
+	@Override
+	public String toString() {
+		return "Partner [id = " + id + ", partnerId = " + partnerId + ", pwd = " + pwd + ", partnerName = " + partnerName + ", email = " + email + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj == null) {
+			return false;
+		}
+		
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		User other = (User) obj;
+
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		
+		return true;
 	}
 }

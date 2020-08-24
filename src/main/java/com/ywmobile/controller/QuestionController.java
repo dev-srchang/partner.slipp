@@ -54,16 +54,39 @@ public class QuestionController {
 	
 	// Action : showQuestion 에서 "수정" 버튼을 눌렀을 시
 	@RequestMapping(value = "/{id}/updateForm", method = RequestMethod.GET)
-	public String updateForm(@PathVariable Long id, Model model) {
-		model.addAttribute("question", questionRepository.findById(id).orElse(null));
+	public String updateForm(@PathVariable Long id, Model model, HttpSession httpSession) {
+		// 로그인한 세션을 가진 사용자인지 판단
+		if (!HttpSessionUtil.isLoginUser(httpSession)) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		}
+		
+		// add security module
+		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
+		Question question = questionRepository.findById(id).orElse(null);
+		if (!question.isSameWriter(loginUser)) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		}
+		
+		model.addAttribute("question", question);
 		
 		return "/qna/updateForm"; // Result : move to updateForm.html
 	}
 	
 	// Action : updateForm 에서 "수정 완료" 버튼을 눌렀을 시
 	@RequestMapping(value = "/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
-	public String update(@PathVariable Long id, String title, String contents) {
+	public String update(@PathVariable Long id, String title, String contents, HttpSession httpSession) {
+		// 로그인한 세션을 가진 사용자인지 판단
+		if (!HttpSessionUtil.isLoginUser(httpSession)) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		}
+		
+		// add security module
+		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
 		Question question = questionRepository.findById(id).orElse(null);
+		if (!question.isSameWriter(loginUser)) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		}
+				
 		question.update(title, contents);
 		questionRepository.save(question);
 		
@@ -72,7 +95,19 @@ public class QuestionController {
 	
 	// Action : showQuestion 에서 "삭제" 버튼을 눌렀을 시
 	@RequestMapping(value = "/delete/{id}", method = {RequestMethod.POST, RequestMethod.DELETE})
-	public String delete(@PathVariable Long id) {
+	public String delete(@PathVariable Long id, HttpSession httpSession) {
+		// 로그인한 세션을 가진 사용자인지 판단
+		if (!HttpSessionUtil.isLoginUser(httpSession)) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		}
+		
+		// add security module
+		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
+		Question question = questionRepository.findById(id).orElse(null);
+		if (!question.isSameWriter(loginUser)) {
+			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		}
+				
 		questionRepository.deleteById(id);
 		
 		return "redirect:/"; // Result : move to index.html
