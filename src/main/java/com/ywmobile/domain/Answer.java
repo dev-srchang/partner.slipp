@@ -2,42 +2,40 @@ package com.ywmobile.domain;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 
 @Entity
-public class Question {
+public class Answer {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue
+	private Long Id;
 	
 	@ManyToOne
-	@JoinColumn(foreignKey = @ForeignKey(name = "fk_question_writer"))
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
 	private User writer;
 	
-	private String title;
+	@ManyToOne
+	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_question"))
+	private Question question;
+	
+	@Lob
 	private String contents;
+	
 	private LocalDateTime createdDate;
 	
-	@OneToMany(mappedBy = "question")
-	@OrderBy("id ASC")
-	private List<Answer> answer;
-	
-	public Question() {
+	public Answer() {
 	}
 
-	public Question(User writer, String title, String contents) {
+	public Answer(User writer, Question question, String contents) {
 		super();
 		this.writer = writer;
-		this.title = title;
+		this.question = question;
 		this.contents = contents;
 		this.createdDate = LocalDateTime.now();
 	}
@@ -49,21 +47,12 @@ public class Question {
 		
 		return createdDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
 	}
-	
-	public void update(String title, String contents) {
-		this.title = title;
-		this.contents = contents;
-	}
-	
-	public boolean isSameWriter(User loginUser) {
-		return this.writer.equals(loginUser);
-	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((Id == null) ? 0 : Id.hashCode());
 		
 		return result;
 	}
@@ -82,21 +71,21 @@ public class Question {
 			return false;
 		}
 		
-		Question other = (Question) obj;
+		Answer other = (Answer) obj;
 
-		if (id == null) {
-			if (other.id != null) {
+		if (Id == null) {
+			if (other.Id != null) {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
+		} else if (!Id.equals(other.Id)) {
 			return false;
 		}
 		
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Question [id = " + id + ", writer = " + writer + ", title = " + title + ", contents = " + contents + "]";
+		return "Answer [Id=  " + Id + ", writer = " + writer + ", contents = " + contents + ", createdDate = " + createdDate + "]";
 	}
 }
