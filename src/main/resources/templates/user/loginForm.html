@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="kr">
 <head>
 	{{> include/header}}
@@ -11,12 +11,17 @@
 	<div class="container" id="main">
 		<div class="col-md-6 col-md-offset-3">
 			<div class="panel panel-default content-main">
+				{{#errMsg}}
+				<div class="alert alert-danger" role="alert">{{this}}</div>
+				{{/errMsg}}
 				<form name="partner" method="post" action="/user/login">
 					<div class="form-group">
-						<label for="userId">Partner ID</label> <input class="form-control" id="partnerId" name="partnerId" placeholder="파트너사 아이디">
+						<label for="userId">Partner ID</label>
+						<input class="form-control" id="partnerId" name="partnerId" placeholder="파트너사 아이디">
 					</div>
 					<div class="form-group">
-						<label for="password">Password</label> <input type="password" class="form-control" id="pwd" name="pwd" placeholder="패스워드">
+						<label for="password">Password</label>
+						<input type="password" class="form-control" id="pwd" name="pwd" placeholder="패스워드">
 					</div>
 					<button type="submit" class="btn btn-success clearfix pull-right">로그인</button>
 					<div class="clearfix" />

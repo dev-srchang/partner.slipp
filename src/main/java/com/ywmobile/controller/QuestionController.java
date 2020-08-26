@@ -53,63 +53,63 @@ public class QuestionController {
 	}
 	
 	// Action : showQuestion 에서 "수정" 버튼을 눌렀을 시
-	@RequestMapping(value = "/{id}/updateForm", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}/updateForm", method = {RequestMethod.GET})
 	public String updateForm(@PathVariable Long id, Model model, HttpSession httpSession) {
-		// 로그인한 세션을 가진 사용자인지 판단
-		if (!HttpSessionUtil.isLoginUser(httpSession)) {
-			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+		try {
+			Question question = questionRepository.findById(id).orElse(null);
+			hasPermission(httpSession, question);
+			model.addAttribute("question", question);
+			
+			return "/qna/updateForm"; // Result : move to updateForm.html
+		} catch (IllegalStateException e) {
+			model.addAttribute("errMsg", e.getMessage());
+			
+			return "/user/loginForm"; // Result : move to loginForm.html
 		}
-		
-		// add security module
-		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
-		Question question = questionRepository.findById(id).orElse(null);
-		if (!question.isSameWriter(loginUser)) {
-			return "redirect:/user/loginForm"; // Result : move to loginForm.html
-		}
-		
-		model.addAttribute("question", question);
-		
-		return "/qna/updateForm"; // Result : move to updateForm.html
 	}
 	
 	// Action : updateForm 에서 "수정 완료" 버튼을 눌렀을 시
 	@RequestMapping(value = "/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
-	public String update(@PathVariable Long id, String title, String contents, HttpSession httpSession) {
-		// 로그인한 세션을 가진 사용자인지 판단
-		if (!HttpSessionUtil.isLoginUser(httpSession)) {
-			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+	public String update(@PathVariable Long id, String title, String contents, Model model, HttpSession httpSession) {
+		try {
+			Question question = questionRepository.findById(id).orElse(null);
+			hasPermission(httpSession, question);
+			question.update(title, contents);
+			questionRepository.save(question);
+			
+			return String.format("redirect:/question/%d", id); // Result : move to showQuestion.html
+		} catch (IllegalStateException e) {
+			model.addAttribute("errMsg", e.getMessage());
+			
+			return "/user/loginForm"; // Result : move to loginForm.html
 		}
-		
-		// add security module
-		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
-		Question question = questionRepository.findById(id).orElse(null);
-		if (!question.isSameWriter(loginUser)) {
-			return "redirect:/user/loginForm"; // Result : move to loginForm.html
-		}
-				
-		question.update(title, contents);
-		questionRepository.save(question);
-		
-		return String.format("redirect:/question/%d", id); // Result : move to showQuestion.html
 	}
 	
 	// Action : showQuestion 에서 "삭제" 버튼을 눌렀을 시
 	@RequestMapping(value = "/delete/{id}", method = {RequestMethod.POST, RequestMethod.DELETE})
-	public String delete(@PathVariable Long id, HttpSession httpSession) {
+	public String delete(@PathVariable Long id, Model model, HttpSession httpSession) {
+		try {
+			Question question = questionRepository.findById(id).orElse(null);
+			hasPermission(httpSession, question);
+			questionRepository.deleteById(id);
+			
+			return "redirect:/"; // Result : move to index.html
+		} catch (IllegalStateException e) {
+			model.addAttribute("errMsg", e.getMessage());
+			
+			return "/user/loginForm"; // Result : move to loginForm.html
+		}
+	}
+	
+	private void hasPermission(HttpSession httpSession, Question question) {
 		// 로그인한 세션을 가진 사용자인지 판단
 		if (!HttpSessionUtil.isLoginUser(httpSession)) {
-			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+			throw new IllegalStateException("로그인이 필요합니다.");
 		}
 		
-		// add security module
 		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
-		Question question = questionRepository.findById(id).orElse(null);
 		if (!question.isSameWriter(loginUser)) {
-			return "redirect:/user/loginForm"; // Result : move to loginForm.html
+			throw new IllegalStateException("자신의 쓴 글만 수정, 삭제가 가능합니다.");			
 		}
-				
-		questionRepository.deleteById(id);
-		
-		return "redirect:/"; // Result : move to index.html
 	}
 }
