@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import com.ywmobile.domain.Question;
 import com.ywmobile.domain.User;
+import com.ywmobile.refer.CodeDefine;
+import com.ywmobile.refer.Result;
 import com.ywmobile.repository.QuestionRepository;
 import com.ywmobile.util.HttpSessionUtil;
 
@@ -54,62 +56,72 @@ public class QuestionController {
 	
 	// Action : showQuestion 에서 "수정" 버튼을 눌렀을 시
 	@RequestMapping(value = "/{id}/updateForm", method = {RequestMethod.GET})
-	public String updateForm(@PathVariable Long id, Model model, HttpSession httpSession) {
-		try {
-			Question question = questionRepository.findById(id).orElse(null);
-			hasPermission(httpSession, question);
-			model.addAttribute("question", question);
-			
-			return "/qna/updateForm"; // Result : move to updateForm.html
-		} catch (IllegalStateException e) {
-			model.addAttribute("errMsg", e.getMessage());
-			
+	public String updateForm(@PathVariable Long id, Model model, HttpSession httpSession) {		
+		Question question = questionRepository.findById(id).orElse(null);
+		Result result = checkValid(httpSession, question);
+		if (!result.isValid()) {
+			model.addAttribute("errMsg", result.getErrMsg());
 			return "/user/loginForm"; // Result : move to loginForm.html
 		}
+		
+		model.addAttribute("question", question);
+		return "/qna/updateForm"; // Result : move to updateForm.html
 	}
 	
 	// Action : updateForm 에서 "수정 완료" 버튼을 눌렀을 시
 	@RequestMapping(value = "/{id}", method = {RequestMethod.POST, RequestMethod.PUT})
 	public String update(@PathVariable Long id, String title, String contents, Model model, HttpSession httpSession) {
-		try {
-			Question question = questionRepository.findById(id).orElse(null);
-			hasPermission(httpSession, question);
-			question.update(title, contents);
-			questionRepository.save(question);
-			
-			return String.format("redirect:/question/%d", id); // Result : move to showQuestion.html
-		} catch (IllegalStateException e) {
-			model.addAttribute("errMsg", e.getMessage());
-			
+		Question question = questionRepository.findById(id).orElse(null);
+		Result result = checkValid(httpSession, question);
+		if (!result.isValid()) {
+			model.addAttribute("errMsg", result.getErrMsg());
 			return "/user/loginForm"; // Result : move to loginForm.html
 		}
+		
+		question.update(title, contents);
+		questionRepository.save(question);
+		return String.format("redirect:/question/%d", id); // Result : move to showQuestion.html
 	}
 	
 	// Action : showQuestion 에서 "삭제" 버튼을 눌렀을 시
 	@RequestMapping(value = "/delete/{id}", method = {RequestMethod.POST, RequestMethod.DELETE})
 	public String delete(@PathVariable Long id, Model model, HttpSession httpSession) {
-		try {
-			Question question = questionRepository.findById(id).orElse(null);
-			hasPermission(httpSession, question);
-			questionRepository.deleteById(id);
-			
-			return "redirect:/"; // Result : move to index.html
-		} catch (IllegalStateException e) {
-			model.addAttribute("errMsg", e.getMessage());
-			
+		Question question = questionRepository.findById(id).orElse(null);
+		Result result = checkValid(httpSession, question);
+		if (!result.isValid()) {
+			model.addAttribute("errMsg", result.getErrMsg());
 			return "/user/loginForm"; // Result : move to loginForm.html
 		}
+		
+		questionRepository.deleteById(id);
+		return "redirect:/"; // Result : move to index.html
 	}
 	
+	// 1st method (not use now)
 	private void hasPermission(HttpSession httpSession, Question question) {
 		// 로그인한 세션을 가진 사용자인지 판단
 		if (!HttpSessionUtil.isLoginUser(httpSession)) {
-			throw new IllegalStateException("로그인이 필요합니다.");
+			throw new IllegalStateException(CodeDefine.ErrMsg.ERR_MSG_NEED_TO_LOGIN);
 		}
 		
 		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
 		if (!question.isSameWriter(loginUser)) {
-			throw new IllegalStateException("자신의 쓴 글만 수정, 삭제가 가능합니다.");			
+			throw new IllegalStateException(CodeDefine.ErrMsg.ERR_MSG_ALLOW_FOR_OWNER);			
 		}
+	}
+	
+	// 2nd method
+	private Result checkValid(HttpSession httpSession, Question question) {
+		// 로그인한 세션을 가진 사용자인지 판단
+		if (!HttpSessionUtil.isLoginUser(httpSession)) {
+			return Result.fail(CodeDefine.ErrMsg.ERR_MSG_NEED_TO_LOGIN);
+		}
+		
+		User loginUser = HttpSessionUtil.getUserFromSession(httpSession);
+		if (!question.isSameWriter(loginUser)) {
+			return Result.fail(CodeDefine.ErrMsg.ERR_MSG_ALLOW_FOR_OWNER);
+		}
+		
+		return Result.success();
 	}
 }
