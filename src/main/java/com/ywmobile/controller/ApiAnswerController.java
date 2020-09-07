@@ -38,6 +38,9 @@ public class ApiAnswerController {
 		Question question = questionRepository.findById(questionId).orElse(null);
 		Answer answer = new Answer(loginUser, question, contents);
 
+		// add on count of answer
+		question.addAnswer();
+
 		return answerRepository.save(answer);
 	}
 
@@ -56,6 +59,11 @@ public class ApiAnswerController {
 		}
 
 		answerRepository.deleteById(id);
+
+		// delete on count of answer
+		Question question = questionRepository.findById(questionId).orElse(null);
+		question.deleteAnswer();
+		questionRepository.save(question);
 
 		return Result.success();
 	}

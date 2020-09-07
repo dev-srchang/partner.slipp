@@ -32,6 +32,9 @@ public class Question {
 	@JsonProperty
 	private String contents;
 
+	@JsonProperty
+	private Integer countOfAnswer = 0;
+
 	private LocalDateTime createdDate;
 
 	@OneToMany(mappedBy = "question")
@@ -108,5 +111,13 @@ public class Question {
 	@Override
 	public String toString() {
 		return "Question [id = " + id + ", writer = " + writer + ", title = " + title + ", contents = " + contents + "]";
+	}
+
+	public void addAnswer() {
+		this.countOfAnswer += 1;
+	}
+
+	public void deleteAnswer() {
+		this.countOfAnswer -= 1;
 	}
 }
