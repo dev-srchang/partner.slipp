@@ -54,6 +54,10 @@ public class Answer {
 		return createdDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
 	}
 
+	public boolean isSameWriter(User loginUser) {
+		return loginUser.equals(this.writer);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

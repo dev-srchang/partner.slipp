@@ -9,11 +9,11 @@ function addAnswer(e) {
 	
 	// 답변 내용 담기
 	var queryStr = $(".answer-write ").serialize();
-	console.log(queryStr);
+	console.log("queryStr : " + queryStr);
 	
 	// answer-write class의 action 정보 담기
 	var url = $(".answer-write").attr("action");
-	console.log(url);
+	console.log("url : " + url);
 	
 	$.ajax({
 		type : 'post',
@@ -22,7 +22,7 @@ function addAnswer(e) {
 		dataType : 'json',
 		error : onError,
 		success : onSuccess
-	});
+	}); 
 }
 
 function onError() {
@@ -32,13 +32,39 @@ function onError() {
 function onSuccess(data, status) {
 	console.log(data);
 	var answerTemplate = $("#answerTemplate").html();
-	var template = answerTemplate.format(data.writer.partnerId, data.formattedCreatedDate, data.contents, data.id, data.id); // 아래 템플릿 사용
+	var template = answerTemplate.format(data.writer.partnerId, data.formattedCreatedDate, data.contents, data.question.id, data.id); // 아래 템플릿 사용
 	
 	$(".qna-comment-partner-articles").prepend(template);
 	
 	$(".answer-write textarea").val("");
 }
 
+$("a.link-delete-article").click(deleteAnswer);
+
+function deleteAnswer(e) {
+	e.preventDefault();
+	
+	var deleteBtn = $(this);
+	var url = deleteBtn.attr("href");
+	console.log("url : " + url);
+	
+	$.ajax({
+		type : 'delete',
+		url : url,
+		dataType : 'json',
+		error : function(xhr, status) {
+			console.log("error");
+		},
+		success : function(data, status) {
+			console.log("success : " + data);
+			if (data.valid) {
+				deleteBtn.closest("article").remove();
+			} else {
+				alert(data.errorMessage);
+			}
+		}
+	});
+}
 
 // 동적 영역 리플래시를 위한 template
 String.prototype.format = function() {
