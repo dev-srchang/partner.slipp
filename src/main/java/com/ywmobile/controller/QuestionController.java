@@ -61,6 +61,7 @@ public class QuestionController {
 		Result result = checkValid(httpSession, question);
 		if (!result.isValid()) {
 			model.addAttribute("errMsg", result.getErrMsg());
+//			System.out.println("updateForm::errMsg : " + result.getErrMsg());
 			return "/user/loginForm"; // Result : move to loginForm.html
 		}
 		
@@ -75,6 +76,7 @@ public class QuestionController {
 		Result result = checkValid(httpSession, question);
 		if (!result.isValid()) {
 			model.addAttribute("errMsg", result.getErrMsg());
+//			System.out.println("update::errMsg : " + result.getErrMsg());
 			return "/user/loginForm"; // Result : move to loginForm.html
 		}
 		
@@ -90,6 +92,7 @@ public class QuestionController {
 		Result result = checkValid(httpSession, question);
 		if (!result.isValid()) {
 			model.addAttribute("errMsg", result.getErrMsg());
+//			System.out.println("delete::errMsg : " + result.getErrMsg());
 			return "/user/loginForm"; // Result : move to loginForm.html
 		}
 		
