@@ -9,26 +9,31 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Answer {
 	@Id
 	@GeneratedValue
-	private Long Id;
-	
+	@JsonProperty
+	private Long id;
+
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_writer"))
+	@JsonProperty
 	private User writer;
-	
+
 	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(name = "fk_answer_question"))
+	@JsonProperty
 	private Question question;
-	
+
 	@Lob
+	@JsonProperty
 	private String contents;
-	
+
 	private LocalDateTime createdDate;
-	
+
 	public Answer() {
 	}
 
@@ -39,12 +44,13 @@ public class Answer {
 		this.contents = contents;
 		this.createdDate = LocalDateTime.now();
 	}
-	
+
 	public String getFormattedCreatedDate() {
+
 		if (createdDate == null) {
 			return "";
 		}
-		
+
 		return createdDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"));
 	}
 
@@ -52,40 +58,42 @@ public class Answer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Id == null) ? 0 : Id.hashCode());
-		
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
+
 		if (this == obj) {
 			return true;
 		}
-		
+
 		if (obj == null) {
 			return false;
 		}
-		
+
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		
+
 		Answer other = (Answer) obj;
 
-		if (Id == null) {
-			if (other.Id != null) {
+		if (id == null) {
+
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!Id.equals(other.Id)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Answer [Id=  " + Id + ", writer = " + writer + ", contents = " + contents + ", createdDate = " + createdDate + "]";
+		return "Answer [id=  " + id + ", writer = " + writer + ", contents = " + contents + ", createdDate = " + createdDate + "]";
 	}
 }

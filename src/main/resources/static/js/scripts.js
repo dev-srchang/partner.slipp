@@ -18,7 +18,7 @@ function addAnswer(e) {
 	$.ajax({
 		type : 'post',
 		url : url,
-		data : queryStr,T
+		data : queryStr,
 		dataType : 'json',
 		error : onError,
 		success : onSuccess
@@ -31,5 +31,23 @@ function onError() {
 
 function onSuccess(data, status) {
 	console.log(data);
+	var answerTemplate = $("#answerTemplate").html();
+	var template = answerTemplate.format(data.writer.partnerId, data.formattedCreatedDate, data.contents, data.id, data.id); // 아래 템플릿 사용
 	
+	$(".qna-comment-partner-articles").prepend(template);
+	
+	$(".answer-write textarea").val("");
 }
+
+
+// 동적 영역 리플래시를 위한 template
+String.prototype.format = function() {
+  var args = arguments;
+  
+  return this.replace(/{(\d+)}/g, function(match, number) {
+    return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+        ;
+  });
+};
