@@ -2,7 +2,6 @@ package com.ywmobile.controller;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,9 +25,8 @@ public class ApiAnswerController {
 	private QuestionRepository questionRepository;
 
 	// Action : showQuestion.html 에서 답변 달기 눌렀을 시
-	@RequestMapping(value = "", method = RequestMethod.POST)
+	@RequestMapping(value = "", method = {RequestMethod.GET, RequestMethod.POST})
 	public Answer create(@PathVariable Long questionId, String contents, HttpSession httpSession) {
-
 		// 로그인한 세션을 가진 사용자인지 판단
 		if (!HttpSessionUtil.isLoginUser(httpSession)) {
 			return null;
@@ -44,9 +42,8 @@ public class ApiAnswerController {
 		return answerRepository.save(answer);
 	}
 
-	@DeleteMapping("/{id}")
+	@RequestMapping(value = "/{id}", method = {RequestMethod.GET, RequestMethod.DELETE})
 	public Result delete(@PathVariable Long questionId, @PathVariable Long id, HttpSession httpSession) {
-
 		if (!HttpSessionUtil.isLoginUser(httpSession)) {
 			return Result.fail(CodeDefine.ErrMsg.ERR_MSG_NEED_TO_LOGIN);
 		}

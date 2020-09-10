@@ -1,9 +1,9 @@
 package com.ywmobile.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.ywmobile.domain.User;
 import com.ywmobile.repository.UserRepository;
@@ -14,7 +14,8 @@ public class ApiUserController {
 	@Autowired
 	UserRepository userRepository;
 
-	@GetMapping("/{id}")
+//	@GetMapping("/{id}")
+	@RequestMapping(value = "/{id}", method = {RequestMethod.GET})
 	public User show(@PathVariable Long id) {
 		return userRepository.findById(id).orElse(null);
 	}
